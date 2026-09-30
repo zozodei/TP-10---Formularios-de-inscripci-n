@@ -1,5 +1,5 @@
 // Pantalla principal de inscripción.
-// Es el "padre" del formulario y del ticket: acá vive el estado real (lifting state up).
+// Es el "padre" del formulario y del ticket: acá vive el estado real 
 // - Si todavía no se envió el formulario, se muestra el formulario.
 // - Si ya se envió, se muestra el TicketConfirmacion con los datos (renderizado condicional).
 import { useEffect, useState } from 'react';
@@ -15,15 +15,11 @@ import {
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import CampoFormulario from '../../components/CampoFormulario';
 import TicketConfirmacion from '../../components/TicketConfirmacion';
 import { DatosInscripcion } from '../../tipos';
 import estilos from './styles';
 
-// ---------------------------------------------------------------
-// Constantes
-// ---------------------------------------------------------------
 
 // Valores con los que arranca el formulario (todo vacío)
 const VALORES_INICIALES: DatosInscripcion = {
@@ -36,7 +32,6 @@ const VALORES_INICIALES: DatosInscripcion = {
 
 // Regex simple de email: algo + @ + algo + . + algo (ej: ana@mail.com)
 const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 // Regex de "solo números" (acepta vacío, porque el teléfono es opcional)
 const REGEX_SOLO_NUMEROS = /^\d*$/;
 
@@ -46,19 +41,24 @@ const CLAVE_ULTIMO_EMAIL = 'ultimoEmail';
 // Las dos opciones posibles de entrada
 const OPCIONES_ENTRADA = ['general', 'vip'] as const;
 
-export default function InscripcionScreen() {
-  // ---------------------------------------------------------------
-  // Estado
-  // ---------------------------------------------------------------
 
+export default function InscripcionScreen() {
   // Datos de la persona inscripta. Si es null, todavía no se envió el formulario.
+
+
+  // Estado que controla qué se muestra en pantalla:
+// null = formulario visible
+// objeto DatosInscripcion = ticket visible
   const [datosInscriptos, setDatosInscriptos] = useState<DatosInscripcion | null>(null);
 
-  // true mientras simulamos el envío al servidor (para mostrar el loading)
+  // true para hacer como se esta mandando al servidor (para mostrar el loading)
+  // Estado de carga:
+// true mientras simulamos el envío,
+// false cuando el usuario puede volver a interactuar normalmente.
   const [enviando, setEnviando] = useState(false);
 
   // useForm maneja TODOS los campos del formulario en un solo lugar.
-  // Renombramos lo que devuelve a nombres en español para que se entienda mejor.
+  // Renombramos lo que devuelve a nombres en español para que se entienda mejor (lo que le pedi a la IA fue que lo q me paso me cambie las varibales a español)
   const {
     control, // conecta cada campo (Controller) con el formulario
     handleSubmit: validarYEnviar, // valida todo y, si está ok, llama a nuestra función
@@ -70,9 +70,8 @@ export default function InscripcionScreen() {
     defaultValues: VALORES_INICIALES,
   });
 
-  // ---------------------------------------------------------------
+
   // Bonus AsyncStorage: al abrir la app, precargamos el último email usado
-  // ---------------------------------------------------------------
   useEffect(() => {
     AsyncStorage.getItem(CLAVE_ULTIMO_EMAIL).then((emailGuardado) => {
       if (emailGuardado) {
@@ -81,15 +80,14 @@ export default function InscripcionScreen() {
     });
   }, []);
 
-  // ---------------------------------------------------------------
+ 
   // Funciones
-  // ---------------------------------------------------------------
 
   // Se ejecuta solo si el formulario pasó todas las validaciones
   const alConfirmar = async (datos: DatosInscripcion) => {
     setEnviando(true);
 
-    // Bonus: simulamos que el envío al servidor tarda 1 segundo
+    //  simulamos que el envío al servidor tarda 1 segundo
     await new Promise((resolver) => setTimeout(resolver, 1000));
 
     // Bonus: guardamos el email para precargarlo la próxima vez
@@ -105,9 +103,8 @@ export default function InscripcionScreen() {
     setDatosInscriptos(null); // al no tener datos, se muestra el formulario
   };
 
-  // ---------------------------------------------------------------
+ 
   // Render
-  // ---------------------------------------------------------------
   return (
     // Evita que el teclado tape los campos.
     // iOS usa 'padding' y Android usa 'height' (es el comportamiento correcto en cada uno).
@@ -188,7 +185,7 @@ export default function InscripcionScreen() {
               )}
             />
 
-            {/* ----- Tipo de entrada: obligatorio, dos botones (GENERAL / VIP) ----- */}
+            {/*  Tipo de entrada: obligatorio, dos botones (GENERAL / VIP) */}
             <Controller
               control={control}
               name="tipoEntrada"
@@ -221,7 +218,7 @@ export default function InscripcionScreen() {
               )}
             />
 
-            {/* ----- Teléfono: opcional, pero si se completa solo puede tener números ----- */}
+            {/* Teléfono: opcional, pero si se completa solo puede tener números  */}
             <Controller
               control={control}
               name="telefono"
@@ -241,7 +238,7 @@ export default function InscripcionScreen() {
             />
 
             {/* ----- Botón de envío ----- */}
-            {/* Mientras "enviamos" mostramos un loading (bonus).
+            {/* Mientras "enviamos" mostramos un loading 
                 El botón queda deshabilitado mientras haya algún error (esValido = false). */}
             {enviando ? (
               <ActivityIndicator size="large" />

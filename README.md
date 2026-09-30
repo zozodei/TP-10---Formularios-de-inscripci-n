@@ -46,3 +46,6 @@ src/
 ![Formulario con errores](screenshots/errores.png)
 ![Formulario válido](screenshots/valido.png)
 ![Ticket de confirmación](screenshots/ticket.png)
+
+
+- Link de la IA consultada: https://chatgpt.com/share/6abcd5f2-dc38-83e9-9119-bcc5aba34076

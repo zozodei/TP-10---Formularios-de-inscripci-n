@@ -1,4 +1,3 @@
-// Tipos compartidos entre la pantalla y los componentes.
 
 // Las dos únicas opciones de entrada. El '' representa "todavía no eligió nada".
 export type TipoEntrada = 'general' | 'vip' | '';
